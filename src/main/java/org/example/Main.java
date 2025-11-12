@@ -10,10 +10,25 @@ import software.amazon.awssdk.services.s3.*;
 import java.util.List;
 
 public class Main {
+    static Main instance;
     public static void main(String[] args) {
         System.out.println("Hello world!");
+        try {
+            Main app = getApp();
+            app.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+            print("Failed to start EC2 instance");
+        }
 
 
+    }
+
+    public static Main getApp(){
+        if (instance == null){
+            instance = new Main();
+        }
+        return instance;
     }
 
     public void start(){
@@ -31,13 +46,24 @@ public class Main {
         RunInstancesResponse response = ec2.runInstances(runRequest);
 
         List<Instance> instances = response.instances();
+        for (Instance instance : instances) {
+            System.out.printf(
+                    "Successfully started EC2 instance %s based on AMI %s",
+                    instance.instanceId(),
+                    instance.imageId());
+        }
 
 
     }
-}
+
+    public static void print(String message){
+        System.out.println(message);
+    }
 
 
+    enum analysisTypes{
+        POS, CONSTITUENCY, DEPENDENCY
+    }
 
-enum analysisTypes{
-    POS, CONSTITUENCY, DEPENDENCY
+
 }
