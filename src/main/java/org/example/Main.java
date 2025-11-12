@@ -1,5 +1,6 @@
 package org.example;
 import org.w3c.dom.Text;
+import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ec2.*;
 import software.amazon.awssdk.services.ec2.model.Instance;
 import software.amazon.awssdk.services.ec2.model.InstanceType;
@@ -32,7 +33,10 @@ public class Main {
     }
 
     public void start(){
-        Ec2Client ec2 = Ec2Client.create();
+        Ec2Client ec2 = Ec2Client
+                .builder()
+                .region(Region.US_EAST_1)   // pick your region
+                .build();
         String amiId =  "ami-076515f20540e6e0b"; // Linux and Java 1.8
         RunInstancesRequest runRequest = RunInstancesRequest.builder()
                 .instanceType(InstanceType.T1_MICRO)

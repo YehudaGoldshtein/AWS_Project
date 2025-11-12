@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="024a96c1-80af-49e4-827c-f75fb595a58c" name="Changes" comment="" />
+    <list default="true" id="024a96c1-80af-49e4-827c-f75fb595a58c" name="Changes" comment="first run try">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -24,11 +27,23 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.Main.executor": "Run",
+    "Maven.AWSLocalApplication [clean].executor": "Run",
+    "Maven.AWSLocalApplication [package].executor": "Run",
+    "Maven.aws-ec2-demo [clean].executor": "Run",
+    "Maven.aws-ec2-demo [package].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true"
+    "kotlin-language-version-configured": "true",
+    "settings.editor.selected.configurable": "reference.settings.project.maven.repository.indices"
   }
 }]]></component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="mvn clean" />
+      <command value="mvn package" />
+    </option>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -38,6 +53,28 @@
       <option name="presentableId" value="Default" />
       <updated>1762937271942</updated>
     </task>
+    <task id="LOCAL‎-00001" summary="initial commit with basic maven dependencies for aws">
+      <option name="closed" value="true" />
+      <created>1762950396046</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL‎-00001" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1762950396046</updated>
+    </task>
+    <task id="LOCAL‎-00002" summary="first run try">
+      <option name="closed" value="true" />
+      <created>1762951192862</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL‎-00002" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1762951192862</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="initial commit with basic maven dependencies for aws" />
+    <MESSAGE value="first run try" />
+    <option name="LAST_COMMIT_MESSAGE" value="first run try" />
   </component>
 </project>
