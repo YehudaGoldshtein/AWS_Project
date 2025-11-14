@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="024a96c1-80af-49e4-827c-f75fb595a58c" name="Changes" comment="first run try">
+    <list default="true" id="024a96c1-80af-49e4-827c-f75fb595a58c" name="Changes" comment="second run try">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -16,9 +17,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="35N4bk1KbbsRiFkIovNwAAEKGkr" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -32,6 +33,8 @@
     "Maven.AWSLocalApplication [package].executor": "Run",
     "Maven.aws-ec2-demo [clean].executor": "Run",
     "Maven.aws-ec2-demo [package].executor": "Run",
+    "Maven.aws-s3-demo [clean].executor": "Run",
+    "Maven.aws-s3-demo [package].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
@@ -69,12 +72,21 @@
       <option name="project" value="LOCAL‎" />
       <updated>1762951192862</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL‎-00003" summary="second run try">
+      <option name="closed" value="true" />
+      <created>1762959378688</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL‎-00003" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1762959378688</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="initial commit with basic maven dependencies for aws" />
     <MESSAGE value="first run try" />
-    <option name="LAST_COMMIT_MESSAGE" value="first run try" />
+    <MESSAGE value="second run try" />
+    <option name="LAST_COMMIT_MESSAGE" value="second run try" />
   </component>
 </project>

@@ -4,7 +4,7 @@
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.example</groupId>
-    <artifactId>aws-s3-demo</artifactId>
+    <artifactId>awsLocal</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
@@ -45,6 +45,12 @@
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>ec2</artifactId>
+        </dependency>
+
+        <!-- sqs client -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sqs</artifactId>
         </dependency>
 
         <!-- Add other AWS SDK modules as needed, e.g. DynamoDB, EC2, etc. -->
