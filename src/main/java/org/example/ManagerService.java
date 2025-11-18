@@ -4,14 +4,27 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ec2.Ec2Client;
 import software.amazon.awssdk.services.ec2.model.*;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 public class ManagerService {
 
     public static final String MANAGER_ROLE = "EMR_EC2_DefaultRole";
-    static String managerTag = "ManagerInstance";
-    static String managerAmiId =  "ami-076515f20540e6e0b"; // needs to be updated to a custom AMI
+    static final String managerTag = "ManagerInstance";
+    static final String managerAmiId =  "ami-071e30579bb36ab78"; // with java 17, more logs
+
+    public static final String MANAGER_REQUEST_QUEUE = "ManagerRequestQueue";
+
+    static final String userDataScript =
+            "#!/bin/bash\n" +
+                    "cd /home/ec2-user\n" +
+                    "nohup java -jar AWSRemote-1.0-SNAPSHOT-shaded.jar > manager.log 2>&1 &\n";
+
+
+    static final String userDataBase64 = Base64.getEncoder()
+            .encodeToString(userDataScript.getBytes(StandardCharsets.UTF_8));
 
     public static Ec2Client ec2 = Ec2Client
             .builder()
@@ -66,6 +79,10 @@ public class ManagerService {
                 .iamInstanceProfile(profile)
                 .maxCount(1)
                 .minCount(1)
+                .userData(userDataBase64)
+                .metadataOptions(InstanceMetadataOptionsRequest.builder()
+                        .instanceMetadataTags(InstanceMetadataTagsState.ENABLED) // <-- this line
+                        .build())
                 .tagSpecifications(TagSpecification.builder()
                         .resourceType(ResourceType.INSTANCE)
                         .tags(Tag.builder()

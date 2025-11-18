@@ -4,75 +4,77 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sqs.SqsClient;
 import software.amazon.awssdk.services.sqs.model.*;
 
+import java.util.List;
+import java.util.Map;
+
 public class SqsService {
 
 
+    static Map<String, String> queueUrls = new java.util.HashMap<>();
 
     private static final SqsClient client = SqsClient.builder()
             .region(Region.US_EAST_1)
             .build();
 
+    public static String getSQSQueue(String queueName) {
 
-    public static SqsClient getClient() {
-        return client;
-    }
+        //first look up in hashmap
+        if (queueUrls.containsKey(queueName)){
+            return queueUrls.get(queueName);
+        }
 
-
-    public static String getSQSQueue(String queueName){
-
+        //first try to get the queue assuming it exists already
         try {
             GetQueueUrlResponse response = client.getQueueUrl(
                     GetQueueUrlRequest.builder()
                             .queueName(queueName)
                             .build()
             );
-
+            //add to hashmap
+            queueUrls.put(queueName, response.queueUrl());
             return response.queueUrl();
+
+        //if it does not exist, create it
         } catch (QueueDoesNotExistException e) {
-            //create the queue
-            Logger.getLogger().log("SQS Queue " + queueName + " does not exist.");
-            CreateQueueResponse response = client.createQueue(CreateQueueRequest.builder()
-                    .queueName(queueName)
-                    .build());
-            return response.queueUrl();
-
-        }
-
-    }
-
-    public boolean checkIfQueueExists(String queueName){
-        try {
-            client.getQueueUrl(
-                    GetQueueUrlRequest.builder()
+            Logger.getLogger().log("SQS Queue " + queueName + " does not exist. Creating it.");
+            CreateQueueResponse response = client.createQueue(
+                    CreateQueueRequest.builder()
                             .queueName(queueName)
                             .build()
             );
-            return true;
-        } catch (QueueDoesNotExistException e) {
-            return false;
+            queueUrls.put(queueName, response.queueUrl());
+            return response.queueUrl();
         }
     }
 
-    public String createQueue(String queueName){
-        client.createQueue(CreateQueueRequest.builder()
-                .queueName(queueName)
-                .build());
-        Logger.getLogger().log("SQS Queue " + queueName + " created.");
-        return getSQSQueue(queueName);
-    }
-
-    public void sendMessage(String queueUrl, String messageBody){
+    public static void sendMessage(String queueName, String messageBody){
         //first check if queue exists
-        if (!checkIfQueueExists(queueUrl)){
-            Logger.getLogger().log("Queue " + queueUrl + " does not exist. Cannot send message.");
-            createQueue(queueUrl);
-        }
         SendMessageRequest sendMsgRequest = SendMessageRequest.builder()
-                .queueUrl(queueUrl)
+                .queueUrl(getSQSQueue(queueName))
                 .messageBody(messageBody)
                 .build();
 
+        //log both url and queue name
+        Logger.getLogger().log("Sending message to SQS Queue: " + queueName + " URL: " + getSQSQueue(queueName));
         client.sendMessage(sendMsgRequest);
         Logger.getLogger().log("Message sent to SQS: " + messageBody);
+    }
+
+    public static List<Message> getMessagesForQueue(String queueName) {
+        ReceiveMessageRequest receiveMessageRequest = ReceiveMessageRequest.builder()
+                .queueUrl(getSQSQueue(queueName))
+                .maxNumberOfMessages(1)
+                .waitTimeSeconds(1)
+                .build();
+
+        ReceiveMessageResponse response = client.receiveMessage(receiveMessageRequest);
+        return response.messages();
+    }
+
+    public static void deleteMessage(String queueName, Message message) {
+        client.deleteMessage(DeleteMessageRequest.builder()
+                .queueUrl(getSQSQueue(queueName))
+                .receiptHandle(message.receiptHandle())
+                .build());
     }
 }

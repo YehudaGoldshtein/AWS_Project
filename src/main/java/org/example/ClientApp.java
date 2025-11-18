@@ -1,16 +1,10 @@
 package org.example;
-
-import software.amazon.awssdk.services.sqs.SqsClient;
-import software.amazon.awssdk.services.sqs.model.DeleteMessageRequest;
 import software.amazon.awssdk.services.sqs.model.Message;
-import software.amazon.awssdk.services.sqs.model.ReceiveMessageRequest;
-import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
-
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-import static org.example.Main.MANAGER_REQUEST_QUEUE;
+import static org.example.ManagerService.MANAGER_REQUEST_QUEUE;
 
 public class ClientApp {
 
@@ -56,36 +50,20 @@ public class ClientApp {
             return;
         }
 
-        //send message to manager's SQS
-        String requestQueueUrl = SqsService.getSQSQueue(MANAGER_REQUEST_QUEUE);
-        Logger.getLogger().log("Setup complete. sending file to manager...");
-        SendMessageRequest request = SendMessageRequest.builder()
-                .queueUrl(requestQueueUrl)
-                .messageBody(analysis.name() + ";" + s3Url)
-                .build();
-
-        SqsService.getClient().sendMessage(request);
+        SqsService.sendMessage(MANAGER_REQUEST_QUEUE, analysis.name() + ";" + s3Url);
         Logger.getLogger().log("File sent to manager: " + file.getName());
 
         //check every second if the result file is in S3 by looking for a "Done" message in the SQS
         while (true){
-            ReceiveMessageRequest receiveMessageRequest = ReceiveMessageRequest.builder()
-                    .queueUrl(requestQueueUrl)
-                    .maxNumberOfMessages(1)
-                    .waitTimeSeconds(1)
-                    .build();
 
-            SqsClient sqsClient = SqsService.getClient();
-            List<Message> messages = sqsClient.receiveMessage(receiveMessageRequest).messages();
+            List<Message> messages = SqsService.getMessagesForQueue(MANAGER_REQUEST_QUEUE);
             if (!messages.isEmpty()){
                 for (Message message : messages) {
+                    Logger.getLogger().log("Received message: " + message.body());
                     if (message.body().equals(taskTypes.DONE + ";" + file.getName())){
                         Logger.getLogger().log("Analysis complete for file: " + file.getName());
                         //delete the message
-                        sqsClient.deleteMessage(DeleteMessageRequest.builder()
-                                .queueUrl(requestQueueUrl)
-                                .receiptHandle(message.receiptHandle())
-                                .build());
+                        SqsService.deleteMessage(MANAGER_REQUEST_QUEUE, message);
                         S3Service.handleCompletion(file.getName(), message);
                         finish(terminateParam);
                         return;
@@ -105,23 +83,30 @@ public class ClientApp {
     }
 
     private static Map<TerminalParams, String> parseArgs(String[] args){
-        if (args == null || args.length < 3 || args.length > 4){
+        if (args == null || args.length < 4 || args.length > 5){
             return null;
         }
         Map<TerminalParams, String> params = new java.util.HashMap<>();
-        params.put(TerminalParams.FILE_PATH, args[0]);
-        params.put(TerminalParams.ANALYSIS_TYPE, args[1]);
-        params.put(TerminalParams.FILE_CAP, args[2]);
-        if (args.length == 4){
-            params.put(TerminalParams.TERMINATE, args[3]);
+        System.out.println("Parsing args...");
+        System.out.println("Arg 0: " + args[1]);
+        params.put(TerminalParams.FILE_PATH, args[1]);
+        System.out.println("Arg 1: " + args[2]);
+        params.put(TerminalParams.ANALYSIS_TYPE, args[2]);
+        params.put(TerminalParams.FILE_CAP, args[3]);
+        if (args.length == 5){
+            params.put(TerminalParams.TERMINATE, args[4]);
         }
         return params;
     }
 
     private static void finish(TerminateAction action){
         Logger.getLogger().log("ClientApp finished execution.");
-        if (action == TerminateAction.TERMINATE)
+        switch (action)
         {
+            case NOTHING:
+                //do nothing
+                break;
+            case TERMINATE:
             //todo: terminate manager
             //ManagerService.terminateManager();
         }
