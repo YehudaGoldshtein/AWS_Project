@@ -20,80 +20,16 @@ public class Main {
 
 
     public static void main(String[] args) {
-        Map<terminalParams, String> terminalParamsMap = parseArgs(args);
-        if (terminalParamsMap == null){
-            Logger.getLogger().log("Invalid arguments. Usage: <file_path> <analysis_type> <file_cap> [terminate]");
-            return;
-        }
-        String filePath = terminalParamsMap.get(terminalParams.FILE_PATH);
-
-        File file = new File(filePath);
-        if (!file.exists()){
-            Logger.getLogger().log("File does not exist: " + filePath + " in path" + file.getAbsolutePath());
-            return;
-        }
-        Instance managerInstance = getManager();
-        if (managerInstance == null){
-            Logger.getLogger().log("Manager is already up. Exiting.");
-            setupManager();
-        }
-
-        SqsClient sqsClient = SqsClient.builder()
-                .region(Region.US_EAST_1)
-                .build();
-        String requestQueueUrl = getSQSQueue(sqsClient, MANAGER_REQUEST_QUEUE);
-        Logger.getLogger().log("Setup complete. sending file to manager...");
-        SendMessageRequest request = SendMessageRequest.builder()
-                .queueUrl(requestQueueUrl)
-                .messageBody(taskTypes.ANALYZE + ";" + file.getName())
-                .build();
-
-        sqsClient.sendMessage(request);
-        Logger.getLogger().log("File sent to manager: " + file.getName());
-
-        //check every second if the result file is in S3 by looking for a "Done" message in the SQS
-        while (true){
-            ReceiveMessageRequest receiveMessageRequest = ReceiveMessageRequest.builder()
-                    .queueUrl(requestQueueUrl)
-                    .maxNumberOfMessages(1)
-                    .waitTimeSeconds(1)
-                    .build();
-
-            List<Message> messages = sqsClient.receiveMessage(receiveMessageRequest).messages();
-            if (!messages.isEmpty()){
-                for (Message message : messages) {
-                    if (message.body().equals(taskTypes.DONE + ";" + file.getName())){
-                        Logger.getLogger().log("Analysis complete for file: " + file.getName());
-                        //delete the message
-                        sqsClient.deleteMessage(DeleteMessageRequest.builder()
-                                .queueUrl(requestQueueUrl)
-                                .receiptHandle(message.receiptHandle())
-                                .build());
-                        handleCompletion(file.getName(), message);
-                        return;
-                    }
-                    else if (message.body().equals(taskTypes.ERROR + ";" + file.getName())){
-                        Logger.getLogger().log("Analysis error for file: " + file.getName());
-                        //delete the message
-                        //Todo: download error log from S3, reschedule e.t.c.
-                        return;
-                    }
-                }
-            }
-        }
-
-
-
+        ClientApp.run(args);
     }
+
+    //that should be the entire main class,
+    // the rest of the code here is for reference
+    // only until all responsibilities are moved to their own classes
 
     enum terminalParams{
         FILE_PATH, ANALYSIS_TYPE, FILE_CAP, TERMINATE
     }
-
-    public enum taskTypes{
-        ANALYZE, TERMINATE, DONE, ERROR
-    }
-
 
     enum analysisTypes{
         POS, CONSTITUENCY, DEPENDENCY
@@ -220,6 +156,37 @@ public class Main {
             Logger.getLogger().log("Output file downloaded: " + outputFile.getAbsolutePath());
         } catch (Exception e) {
             Logger.getLogger().log("Error downloading output file: " + e.getMessage());
+        }
+    }
+
+    public static String uploadFile(File file){
+        S3Client s3 = S3Client.builder()
+                .region(Region.US_EAST_1)
+                .build();
+
+        String key = file.getName();
+        try {
+            //i manually created this bucket in AWS console
+            s3.putObject(builder -> builder.bucket(bucketName).key(key).build(),
+                    file.toPath());
+            Logger.getLogger().log("File uploaded to S3: " + key);
+            return "s3://" + bucketName + "/" + key;
+        } catch (Exception e) {
+            Logger.getLogger().log("Error uploading file to S3: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public static analysisTypes getAnalysisType(String analysisType){
+        switch (analysisType.toLowerCase()){
+            case "pos":
+                return analysisTypes.POS;
+            case "constituency":
+                return analysisTypes.CONSTITUENCY;
+            case "dependency":
+                return analysisTypes.DEPENDENCY;
+            default:
+                return null;
         }
     }
 

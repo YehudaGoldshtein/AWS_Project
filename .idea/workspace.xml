@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="024a96c1-80af-49e4-827c-f75fb595a58c" name="Changes" comment="second run try">
+    <list default="true" id="024a96c1-80af-49e4-827c-f75fb595a58c" name="Changes" comment="finished a first draft of local application">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/ClientApp.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/ManagerService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/S3Service.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/SqsService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
@@ -13,6 +17,13 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -26,21 +37,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Run",
-    "Maven.AWSLocalApplication [clean].executor": "Run",
-    "Maven.AWSLocalApplication [package].executor": "Run",
-    "Maven.aws-ec2-demo [clean].executor": "Run",
-    "Maven.aws-ec2-demo [package].executor": "Run",
-    "Maven.aws-s3-demo [clean].executor": "Run",
-    "Maven.aws-s3-demo [package].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "settings.editor.selected.configurable": "reference.settings.project.maven.repository.indices"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.AWSLocalApplication [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.AWSLocalApplication [package].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.aws-ec2-demo [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.aws-ec2-demo [package].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.aws-s3-demo [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.aws-s3-demo [package].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.awsLocal [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.awsLocal [package].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;
   }
-}]]></component>
+}</component>
   <component name="RunAnythingCache">
     <option name="myCommands">
       <command value="mvn clean" />
@@ -80,13 +93,22 @@
       <option name="project" value="LOCAL‎" />
       <updated>1762959378688</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL‎-00004" summary="finished a first draft of local application">
+      <option name="closed" value="true" />
+      <created>1763110951776</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL‎-00004" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1763110951776</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="initial commit with basic maven dependencies for aws" />
     <MESSAGE value="first run try" />
     <MESSAGE value="second run try" />
-    <option name="LAST_COMMIT_MESSAGE" value="second run try" />
+    <MESSAGE value="finished a first draft of local application" />
+    <option name="LAST_COMMIT_MESSAGE" value="finished a first draft of local application" />
   </component>
 </project>
