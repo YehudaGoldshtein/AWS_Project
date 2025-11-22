@@ -23,6 +23,7 @@ public class ManagerService {
     static final String WORKER_AMI_ID =  "ami-071e30579bb36ab78"; // with java 17, more logs
 
     public static final String LOCAL_TO_MANAGER_REQUEST_QUEUE = "LocalToManagerRequestQueue";
+    public static final String MANAGER_TO_LOCAL_REQUEST_QUEUE = "ManagerToLocalRequestQueue";
     static final String jarName = "AWSRemote-1.0-SNAPSHOT-shaded.jar";
     private static final int MAX_MACHINES = 18;
 
@@ -52,7 +53,7 @@ public class ManagerService {
             .region(Region.US_EAST_1)   // pick your region
             .build();
 
-    public static Instance getManager(){
+    public static Instance getManager(boolean CreateIfNotExists){
         Instance managerInstance = null;
         List<Filter> filters = new ArrayList<>();
 
@@ -97,7 +98,11 @@ public class ManagerService {
                     " > manager.log 2>&1 &\n";
             Logger.getLogger().log("updated user data: " + updatedUserData);
         }
-        else Logger.getLogger().log("Credentials are not session credentials!");
+        else {
+            Logger.getLogger().log("Credentials are not session credentials!");
+            //since we need session credentials to run the manager, we return null here
+            return null;
+        }
         String UPDATED_WORKER_USER_DATA_BASE_64 = Base64.getEncoder()
                 .encodeToString((updatedUserData.getBytes(StandardCharsets.UTF_8)));
 
@@ -112,7 +117,7 @@ public class ManagerService {
         }
 
         Logger.getLogger().log("No running manager instance found.");
-        if (managerInstance == null){
+        if (managerInstance == null && CreateIfNotExists){
             managerInstance = setupManager(UPDATED_WORKER_USER_DATA_BASE_64);
         }
         return managerInstance;
@@ -157,4 +162,17 @@ public class ManagerService {
     }
 
 
+    public static void terminateManager() {
+        Instance manager = getManager(false);
+        if (manager != null) {
+            TerminateInstancesRequest terminateRequest = TerminateInstancesRequest.builder()
+                    .instanceIds(manager.instanceId())
+                    .build();
+
+            ec2.terminateInstances(terminateRequest);
+            Logger.getLogger().log("Terminated manager instance: " + manager.instanceId());
+        } else {
+            Logger.getLogger().log("No manager instance found to terminate.");
+        }
+    }
 }

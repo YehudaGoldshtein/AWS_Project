@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="024a96c1-80af-49e4-827c-f75fb595a58c" name="Changes" comment="finally recieved back message from remote via sqs!">
+    <list default="true" id="024a96c1-80af-49e4-827c-f75fb595a58c" name="Changes" comment="managed to get messages from worker -&gt; manager -&gt; local">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/ClientApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/ClientApp.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/ManagerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/ManagerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/SqsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/SqsService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,7 +113,15 @@
       <option name="project" value="LOCAL‎" />
       <updated>1763506219607</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL‎-00007" summary="managed to get messages from worker -&gt; manager -&gt; local">
+      <option name="closed" value="true" />
+      <created>1763818370947</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL‎-00007" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1763818370947</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -125,6 +131,7 @@
     <MESSAGE value="finished a first draft of local application" />
     <MESSAGE value="moved most responsibilities to special util classes" />
     <MESSAGE value="finally recieved back message from remote via sqs!" />
-    <option name="LAST_COMMIT_MESSAGE" value="finally recieved back message from remote via sqs!" />
+    <MESSAGE value="managed to get messages from worker -&gt; manager -&gt; local" />
+    <option name="LAST_COMMIT_MESSAGE" value="managed to get messages from worker -&gt; manager -&gt; local" />
   </component>
 </project>

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.example.ManagerService.LOCAL_TO_MANAGER_REQUEST_QUEUE;
+import static org.example.ManagerService.MANAGER_TO_LOCAL_REQUEST_QUEUE;
 
 public class ClientApp {
 
@@ -18,13 +19,12 @@ public class ClientApp {
             return;
         }
         String filePath = terminalParamsMap.get(TerminalParams.FILE_PATH);
-        String analysisType = terminalParamsMap.get(TerminalParams.ANALYSIS_TYPE);
-        AnalysisTypes analysis = getAnalysisType(analysisType);
+        String outputPath = terminalParamsMap.get(TerminalParams.OUTPUT_PATH);
         TerminateAction terminateParam = getTerminalParam(terminalParamsMap);
 
         //handle sad cases
-        if (analysis == null){
-            System.out.println("Invalid analysis type. Supported types: pos, constituency, dependency");
+        if (outputPath == null || outputPath.isEmpty()){
+            System.out.println("Invalid output path.");
             return;
         }
 
@@ -35,13 +35,10 @@ public class ClientApp {
         }
 
         //manager existence verification is done in the MangerService class
-        if (ManagerService.getManager() == null){
+        if (ManagerService.getManager(true) == null){
             Logger.getLogger().log("Manager setup failed. Exiting.");
             return;
         }
-
-        //setup workers
-//        ManagerService.getWorkerPool(1);
 
         //upload file to S3
         String s3Url = S3Service.uploadFile(file);
@@ -55,20 +52,20 @@ public class ClientApp {
 
         SqsService.cleanUpSQSQueues(LOCAL_TO_MANAGER_REQUEST_QUEUE);
 
-        SqsService.sendMessage(LOCAL_TO_MANAGER_REQUEST_QUEUE, analysis.name() + ";" + s3Url);
+        SqsService.sendMessage(LOCAL_TO_MANAGER_REQUEST_QUEUE, s3Url);
         Logger.getLogger().log("File sent to manager: " + file.getName());
 
         //check every second if the result file is in S3 by looking for a "Done" message in the SQS
         while (true){
 
-            List<Message> messages = SqsService.getMessagesForQueue(LOCAL_TO_MANAGER_REQUEST_QUEUE);
+            List<Message> messages = SqsService.getMessagesForQueue(MANAGER_TO_LOCAL_REQUEST_QUEUE);
             if (!messages.isEmpty()){
                 for (Message message : messages) {
                     Logger.getLogger().log("Received message: " + message.body());
                     if (message.body().equals(taskTypes.DONE + ";" + file.getName())){
                         Logger.getLogger().log("Analysis complete for file: " + file.getName());
                         //delete the message
-                        SqsService.deleteMessage(LOCAL_TO_MANAGER_REQUEST_QUEUE, message);
+                        SqsService.deleteMessage(MANAGER_TO_LOCAL_REQUEST_QUEUE, message);
                         S3Service.handleCompletion(file.getName(), message);
                         finish(terminateParam);
                         return;
@@ -96,7 +93,7 @@ public class ClientApp {
         System.out.println("Arg 0: " + args[1]);
         params.put(TerminalParams.FILE_PATH, args[1]);
         System.out.println("Arg 1: " + args[2]);
-        params.put(TerminalParams.ANALYSIS_TYPE, args[2]);
+        params.put(TerminalParams.OUTPUT_PATH, args[2]);
         params.put(TerminalParams.FILE_CAP, args[3]);
         if (args.length == 5){
             params.put(TerminalParams.TERMINATE, args[4]);
@@ -112,8 +109,7 @@ public class ClientApp {
                 //do nothing
                 break;
             case TERMINATE:
-            //todo: terminate manager
-            //ManagerService.terminateManager();
+                ManagerService.terminateManager();
         }
     }
 
@@ -134,7 +130,7 @@ public class ClientApp {
     }
 
     enum TerminalParams {
-        FILE_PATH, ANALYSIS_TYPE, FILE_CAP, TERMINATE
+        FILE_PATH, OUTPUT_PATH, FILE_CAP, TERMINATE
     }
 
     enum TerminateAction {
