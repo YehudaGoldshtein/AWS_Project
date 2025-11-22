@@ -64,8 +64,6 @@ public class ManagerService {
             updatedUserData = "#!/bin/bash\n" +
                     "cd /home/ec2-user\n" +
                     "nohup java -jar " + jarName + " " +
-                    //this arg is a ghost arg because in the manager we mismatch the args count, remove after fixing that
-                    "aehrehrt " +
                     credentials.accessKeyId() + " " +
                     credentials.secretAccessKey() + " " +
                     sessionToken + " " +
