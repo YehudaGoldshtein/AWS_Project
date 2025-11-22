@@ -56,7 +56,7 @@ public class ClientApp {
         Logger.getLogger().log("File sent to manager: " + file.getName());
 
         //check every second if the result file is in S3 by looking for a "Done" message in the SQS
-        while (true){
+        while (!done()){
 
             List<Message> messages = SqsService.getMessagesForQueue(MANAGER_TO_LOCAL_REQUEST_QUEUE);
             if (!messages.isEmpty()){
@@ -148,6 +148,11 @@ public class ClientApp {
             default:
                 return null;
         }
+    }
+
+    static boolean done(){
+        //later we can determine if we are done based on some condition like is file done processing
+        return false;
     }
 
 

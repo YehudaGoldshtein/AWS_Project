@@ -16,7 +16,7 @@ public class ManagerService {
 
     public static final String MANAGER_ROLE = "EMR_EC2_DefaultRole";
     static final String MANAGER_TAG = "ManagerInstance";
-    static final String MANAGER_AMI_ID =  "ami-0a8735e946e04777d"; // with java 17, more logs
+    static final String MANAGER_AMI_ID =  "ami-0538d1cfec41b7f29"; // with java 17, more logs
     public static final String LOCAL_TO_MANAGER_REQUEST_QUEUE = "LocalToManagerRequestQueue";
     public static final String MANAGER_TO_LOCAL_REQUEST_QUEUE = "ManagerToLocalRequestQueue";
     static final String jarName = "AWSRemote-1.0-SNAPSHOT-shaded.jar";
@@ -68,7 +68,6 @@ public class ManagerService {
                     credentials.secretAccessKey() + " " +
                     sessionToken + " " +
                     " > manager.log 2>&1 &\n";
-            Logger.getLogger().log("updated user data: " + updatedUserData);
         }
         else {
             Logger.getLogger().log("Credentials are not session credentials!");
