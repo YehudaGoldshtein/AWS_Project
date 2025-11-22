@@ -1,5 +1,8 @@
 package org.example;
 
+import software.amazon.awssdk.auth.credentials.AwsCredentials;
+import software.amazon.awssdk.auth.credentials.AwsSessionCredentials;
+import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ec2.Ec2Client;
 import software.amazon.awssdk.services.ec2.model.*;
@@ -12,19 +15,37 @@ import java.util.List;
 public class ManagerService {
 
     public static final String MANAGER_ROLE = "EMR_EC2_DefaultRole";
-    static final String managerTag = "ManagerInstance";
-    static final String managerAmiId =  "ami-071e30579bb36ab78"; // with java 17, more logs
+    static final String MANAGER_TAG = "ManagerInstance";
+    static final String MANAGER_AMI_ID =  "ami-0a8735e946e04777d"; // with java 17, more logs
 
-    public static final String MANAGER_REQUEST_QUEUE = "ManagerRequestQueue";
+    public static final String WORKER_ROLE = "EMR_EC2_DefaultRole";
+    static final String WORKER_TAG = "WorkerInstance";
+    static final String WORKER_AMI_ID =  "ami-071e30579bb36ab78"; // with java 17, more logs
+
+    public static final String LOCAL_TO_MANAGER_REQUEST_QUEUE = "LocalToManagerRequestQueue";
+    static final String jarName = "AWSRemote-1.0-SNAPSHOT-shaded.jar";
+    private static final int MAX_MACHINES = 18;
 
     static final String userDataScript =
             "#!/bin/bash\n" +
                     "cd /home/ec2-user\n" +
-                    "nohup java -jar AWSRemote-1.0-SNAPSHOT-shaded.jar > manager.log 2>&1 &\n";
+                    "nohup java -jar " + jarName + " > manager.log 2>&1 &\n";
 
 
     static final String userDataBase64 = Base64.getEncoder()
             .encodeToString(userDataScript.getBytes(StandardCharsets.UTF_8));
+
+    //worker userdata
+    static final String WORKER_JAR_NAME = "AWSRemote-1.0-SNAPSHOT-shaded.jar";
+    static final String WORKER_USER_DATA_SCRIPT =
+            "#!/bin/bash\n" +
+                    "cd /home/ec2-user\n" +
+                    "nohup java -jar " + jarName + " > worker.log 2>&1 &\n";
+
+
+    static final String WORKER_USER_DATA_BASE_64 = Base64.getEncoder()
+            .encodeToString(WORKER_USER_DATA_SCRIPT.getBytes(StandardCharsets.UTF_8));
+
 
     public static Ec2Client ec2 = Ec2Client
             .builder()
@@ -37,7 +58,7 @@ public class ManagerService {
 
         filters.add(Filter.builder()
                 .name("tag:Role")
-                .values(managerTag)
+                .values(MANAGER_TAG)
                 .build());
 
         filters.add(Filter.builder()
@@ -51,6 +72,37 @@ public class ManagerService {
 
         DescribeInstancesResponse response = Ec2Client.create().describeInstances(request);
 
+        //test code
+        ProfileCredentialsProvider credentialsProvider =
+                ProfileCredentialsProvider.builder()
+                        .profileName("default")
+                        .build();
+
+        // 3. Resolve the credentials
+        // This loads the actual values from the file.
+        AwsCredentials credentials = credentialsProvider.resolveCredentials();
+        String updatedUserData = "";
+        if (credentials instanceof AwsSessionCredentials) {
+            // Cast to the type that guarantees the session token method exists
+            AwsSessionCredentials sessionCredentials = (AwsSessionCredentials) credentials;
+
+            String sessionToken = sessionCredentials.sessionToken();
+            updatedUserData = "#!/bin/bash\n" +
+                    "cd /home/ec2-user\n" +
+                    "nohup java -jar " + jarName + " " +
+                    "aehrehrt " +
+                    credentials.accessKeyId() + " " +
+                    credentials.secretAccessKey() + " " +
+                    sessionToken + " " +
+                    " > manager.log 2>&1 &\n";
+            Logger.getLogger().log("updated user data: " + updatedUserData);
+        }
+        else Logger.getLogger().log("Credentials are not session credentials!");
+        String UPDATED_WORKER_USER_DATA_BASE_64 = Base64.getEncoder()
+                .encodeToString((updatedUserData.getBytes(StandardCharsets.UTF_8)));
+
+        //end test code
+
         for (Reservation reservation : response.reservations()) {
             for (Instance instance : reservation.instances()) {
                 Logger.getLogger().log("Found running manager instance: " + instance.instanceId());
@@ -61,12 +113,12 @@ public class ManagerService {
 
         Logger.getLogger().log("No running manager instance found.");
         if (managerInstance == null){
-            managerInstance = setupManager();
+            managerInstance = setupManager(UPDATED_WORKER_USER_DATA_BASE_64);
         }
         return managerInstance;
     }
 
-    public static Instance setupManager(){
+    public static Instance setupManager(String userData){
         IamInstanceProfileSpecification profile =
                 IamInstanceProfileSpecification.builder()
                         .name(MANAGER_ROLE)  // or whatever role name you picked
@@ -75,11 +127,11 @@ public class ManagerService {
 
         RunInstancesRequest runRequest = RunInstancesRequest.builder()
                 .instanceType(InstanceType.T1_MICRO)
-                .imageId(managerAmiId)
+                .imageId(MANAGER_AMI_ID)
                 .iamInstanceProfile(profile)
                 .maxCount(1)
                 .minCount(1)
-                .userData(userDataBase64)
+                .userData(userData)
                 .metadataOptions(InstanceMetadataOptionsRequest.builder()
                         .instanceMetadataTags(InstanceMetadataTagsState.ENABLED) // <-- this line
                         .build())
@@ -87,7 +139,7 @@ public class ManagerService {
                         .resourceType(ResourceType.INSTANCE)
                         .tags(Tag.builder()
                                 .key("Role")
-                                .value(managerTag)
+                                .value(MANAGER_TAG)
                                 .build())
                         .build())
                 .build();
@@ -103,4 +155,6 @@ public class ManagerService {
 
         return null;
     }
+
+
 }

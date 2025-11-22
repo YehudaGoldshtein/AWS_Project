@@ -6,6 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="024a96c1-80af-49e4-827c-f75fb595a58c" name="Changes" comment="finally recieved back message from remote via sqs!">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/ClientApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/ClientApp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/ManagerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/ManagerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/SqsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/SqsService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,23 +35,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.AWSLocalApplication [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.AWSLocalApplication [package].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.aws-ec2-demo [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.aws-ec2-demo [package].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.aws-s3-demo [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.aws-s3-demo [package].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.awsLocal [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.awsLocal [package].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "Maven.AWSLocalApplication [clean].executor": "Run",
+    "Maven.AWSLocalApplication [package].executor": "Run",
+    "Maven.aws-ec2-demo [clean].executor": "Run",
+    "Maven.aws-ec2-demo [package].executor": "Run",
+    "Maven.aws-s3-demo [clean].executor": "Run",
+    "Maven.aws-s3-demo [package].executor": "Run",
+    "Maven.awsLocal [clean].executor": "Run",
+    "Maven.awsLocal [package].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "remote1",
+    "kotlin-language-version-configured": "true",
+    "settings.editor.selected.configurable": "reference.settings.project.maven.repository.indices"
   }
-}</component>
+}]]></component>
   <component name="RunAnythingCache">
     <option name="myCommands">
       <command value="mvn clean" />

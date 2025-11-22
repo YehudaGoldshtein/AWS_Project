@@ -77,4 +77,17 @@ public class SqsService {
                 .receiptHandle(message.receiptHandle())
                 .build());
     }
+
+    public static void cleanUpSQSQueues(String sqsName){
+        try {
+            String queueUrl = getSQSQueue(sqsName);
+            //get all messages in the queue
+            PurgeQueueRequest purgeQueueRequest = PurgeQueueRequest.builder()
+                    .queueUrl(queueUrl)
+                    .build();
+            client.purgeQueue(purgeQueueRequest);
+        } catch (SqsException e) {
+            Logger.getLogger().log("Failed to delete SQS Queue: " + sqsName + " Error: " + e.awsErrorDetails().errorMessage());
+        }
+    }
 }

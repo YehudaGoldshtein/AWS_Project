@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-import static org.example.ManagerService.MANAGER_REQUEST_QUEUE;
+import static org.example.ManagerService.LOCAL_TO_MANAGER_REQUEST_QUEUE;
 
 public class ClientApp {
 
@@ -40,6 +40,9 @@ public class ClientApp {
             return;
         }
 
+        //setup workers
+//        ManagerService.getWorkerPool(1);
+
         //upload file to S3
         String s3Url = S3Service.uploadFile(file);
 
@@ -50,20 +53,22 @@ public class ClientApp {
             return;
         }
 
-        SqsService.sendMessage(MANAGER_REQUEST_QUEUE, analysis.name() + ";" + s3Url);
+        SqsService.cleanUpSQSQueues(LOCAL_TO_MANAGER_REQUEST_QUEUE);
+
+        SqsService.sendMessage(LOCAL_TO_MANAGER_REQUEST_QUEUE, analysis.name() + ";" + s3Url);
         Logger.getLogger().log("File sent to manager: " + file.getName());
 
         //check every second if the result file is in S3 by looking for a "Done" message in the SQS
         while (true){
 
-            List<Message> messages = SqsService.getMessagesForQueue(MANAGER_REQUEST_QUEUE);
+            List<Message> messages = SqsService.getMessagesForQueue(LOCAL_TO_MANAGER_REQUEST_QUEUE);
             if (!messages.isEmpty()){
                 for (Message message : messages) {
                     Logger.getLogger().log("Received message: " + message.body());
                     if (message.body().equals(taskTypes.DONE + ";" + file.getName())){
                         Logger.getLogger().log("Analysis complete for file: " + file.getName());
                         //delete the message
-                        SqsService.deleteMessage(MANAGER_REQUEST_QUEUE, message);
+                        SqsService.deleteMessage(LOCAL_TO_MANAGER_REQUEST_QUEUE, message);
                         S3Service.handleCompletion(file.getName(), message);
                         finish(terminateParam);
                         return;
@@ -148,6 +153,7 @@ public class ClientApp {
                 return null;
         }
     }
+
 
     enum taskTypes{
         DONE, ERROR
