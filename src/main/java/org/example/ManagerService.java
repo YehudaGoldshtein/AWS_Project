@@ -17,36 +17,9 @@ public class ManagerService {
     public static final String MANAGER_ROLE = "EMR_EC2_DefaultRole";
     static final String MANAGER_TAG = "ManagerInstance";
     static final String MANAGER_AMI_ID =  "ami-0a8735e946e04777d"; // with java 17, more logs
-
-    public static final String WORKER_ROLE = "EMR_EC2_DefaultRole";
-    static final String WORKER_TAG = "WorkerInstance";
-    static final String WORKER_AMI_ID =  "ami-071e30579bb36ab78"; // with java 17, more logs
-
     public static final String LOCAL_TO_MANAGER_REQUEST_QUEUE = "LocalToManagerRequestQueue";
     public static final String MANAGER_TO_LOCAL_REQUEST_QUEUE = "ManagerToLocalRequestQueue";
     static final String jarName = "AWSRemote-1.0-SNAPSHOT-shaded.jar";
-    private static final int MAX_MACHINES = 18;
-
-    static final String userDataScript =
-            "#!/bin/bash\n" +
-                    "cd /home/ec2-user\n" +
-                    "nohup java -jar " + jarName + " > manager.log 2>&1 &\n";
-
-
-    static final String userDataBase64 = Base64.getEncoder()
-            .encodeToString(userDataScript.getBytes(StandardCharsets.UTF_8));
-
-    //worker userdata
-    static final String WORKER_JAR_NAME = "AWSRemote-1.0-SNAPSHOT-shaded.jar";
-    static final String WORKER_USER_DATA_SCRIPT =
-            "#!/bin/bash\n" +
-                    "cd /home/ec2-user\n" +
-                    "nohup java -jar " + jarName + " > worker.log 2>&1 &\n";
-
-
-    static final String WORKER_USER_DATA_BASE_64 = Base64.getEncoder()
-            .encodeToString(WORKER_USER_DATA_SCRIPT.getBytes(StandardCharsets.UTF_8));
-
 
     public static Ec2Client ec2 = Ec2Client
             .builder()
@@ -91,6 +64,7 @@ public class ManagerService {
             updatedUserData = "#!/bin/bash\n" +
                     "cd /home/ec2-user\n" +
                     "nohup java -jar " + jarName + " " +
+                    //this arg is a ghost arg because in the manager we mismatch the args count, remove after fixing that
                     "aehrehrt " +
                     credentials.accessKeyId() + " " +
                     credentials.secretAccessKey() + " " +
