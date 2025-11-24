@@ -51,6 +51,9 @@ public class ClientApp {
         }
 
         SqsService.cleanUpSQSQueues(LOCAL_TO_MANAGER_REQUEST_QUEUE);
+        SqsService.cleanUpSQSQueues(MANAGER_TO_LOCAL_REQUEST_QUEUE);
+        SqsService.cleanUpSQSQueues(MANAGER_TO_LOCAL_REQUEST_QUEUE);
+        SqsService.cleanUpSQSQueues("WorkerToManagerRequestQueue");
 
         SqsService.sendMessage(LOCAL_TO_MANAGER_REQUEST_QUEUE, s3Url);
         Logger.getLogger().log("File sent to manager: " + file.getName());
@@ -65,7 +68,6 @@ public class ClientApp {
                     if (message.body().equals(taskTypes.DONE + ";" + file.getName())){
                         Logger.getLogger().log("Analysis complete for file: " + file.getName());
                         //delete the message
-                        SqsService.deleteMessage(MANAGER_TO_LOCAL_REQUEST_QUEUE, message);
                         S3Service.handleCompletion(file.getName(), message);
                         finish(terminateParam);
                         return;
@@ -77,6 +79,8 @@ public class ClientApp {
                         finish(terminateParam);
                         return;
                     }
+                    SqsService.deleteMessage(MANAGER_TO_LOCAL_REQUEST_QUEUE, message);
+
                 }
             }
         }

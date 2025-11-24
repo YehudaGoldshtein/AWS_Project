@@ -16,7 +16,7 @@ public class ManagerService {
 
     public static final String MANAGER_ROLE = "EMR_EC2_DefaultRole";
     static final String MANAGER_TAG = "ManagerInstance";
-    static final String MANAGER_AMI_ID =  "ami-0538d1cfec41b7f29"; // with java 17, more logs
+    static final String MANAGER_AMI_ID =  "ami-00b3dbedc07e630b8"; // with java 17, more logs
     public static final String LOCAL_TO_MANAGER_REQUEST_QUEUE = "LocalToManagerRequestQueue";
     public static final String MANAGER_TO_LOCAL_REQUEST_QUEUE = "ManagerToLocalRequestQueue";
     static final String jarName = "AWSRemote-1.0-SNAPSHOT-shaded.jar";
@@ -28,6 +28,7 @@ public class ManagerService {
 
     public static Instance getManager(boolean CreateIfNotExists){
         Instance managerInstance = null;
+        //first check if a manager instance is already running
         List<Filter> filters = new ArrayList<>();
 
         filters.add(Filter.builder()
