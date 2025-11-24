@@ -17,6 +17,8 @@ public class ManagerService {
     public static final String MANAGER_ROLE = "EMR_EC2_DefaultRole";
     static final String MANAGER_TAG = "ManagerInstance";
     static final String MANAGER_AMI_ID =  "ami-00b3dbedc07e630b8"; // with java 17, more logs
+    static final String WORKER_AMI =  "ami-00someAMI"; // replace this with actual worker AMI ID,
+    // make sure it's not manager AMI for it will cuase an infinite loop of machines creating machines
     public static final String LOCAL_TO_MANAGER_REQUEST_QUEUE = "LocalToManagerRequestQueue";
     public static final String MANAGER_TO_LOCAL_REQUEST_QUEUE = "ManagerToLocalRequestQueue";
     static final String jarName = "AWSRemote-1.0-SNAPSHOT-shaded.jar";
@@ -27,72 +29,20 @@ public class ManagerService {
             .build();
 
     public static Instance getManager(boolean CreateIfNotExists){
-        Instance managerInstance = null;
         //first check if a manager instance is already running
-        List<Filter> filters = new ArrayList<>();
-
-        filters.add(Filter.builder()
-                .name("tag:Role")
-                .values(MANAGER_TAG)
-                .build());
-
-        filters.add(Filter.builder()
-                .name("instance-state-name")
-                .values(InstanceStateName.RUNNING.toString())  // "running"
-                .build());
-
-        DescribeInstancesRequest request = DescribeInstancesRequest.builder()
-                .filters(filters)
-                .build();
-
-        DescribeInstancesResponse response = Ec2Client.create().describeInstances(request);
-
-        //test code
-        ProfileCredentialsProvider credentialsProvider =
-                ProfileCredentialsProvider.builder()
-                        .profileName("default")
-                        .build();
-
-        // 3. Resolve the credentials
-        // This loads the actual values from the file.
-        AwsCredentials credentials = credentialsProvider.resolveCredentials();
-        String updatedUserData = "";
-        if (credentials instanceof AwsSessionCredentials) {
-            // Cast to the type that guarantees the session token method exists
-            AwsSessionCredentials sessionCredentials = (AwsSessionCredentials) credentials;
-
-            String sessionToken = sessionCredentials.sessionToken();
-            updatedUserData = "#!/bin/bash\n" +
-                    "cd /home/ec2-user\n" +
-                    "nohup java -jar " + jarName + " " +
-                    credentials.accessKeyId() + " " +
-                    credentials.secretAccessKey() + " " +
-                    sessionToken + " " +
-                    " > manager.log 2>&1 &\n";
+        Instance existingInstance = new ManagerService().getExisitingInstance();
+        if (existingInstance != null || !CreateIfNotExists){
+            return existingInstance;
         }
-        else {
-            Logger.getLogger().log("Credentials are not session credentials!");
-            //since we need session credentials to run the manager, we return null here
+        //else create a new one
+        Logger.getLogger().log("No running manager instance found.");
+        String managerUserData = getManagerUserData();
+        if (managerUserData == null){
+            Logger.getLogger().log("Failed to get manager user data.");
             return null;
         }
-        String UPDATED_WORKER_USER_DATA_BASE_64 = Base64.getEncoder()
-                .encodeToString((updatedUserData.getBytes(StandardCharsets.UTF_8)));
+        return  setupManager(managerUserData);
 
-        //end test code
-
-        for (Reservation reservation : response.reservations()) {
-            for (Instance instance : reservation.instances()) {
-                Logger.getLogger().log("Found running manager instance: " + instance.instanceId());
-                managerInstance = instance;
-                break;
-            }
-        }
-
-        Logger.getLogger().log("No running manager instance found.");
-        if (managerInstance == null && CreateIfNotExists){
-            managerInstance = setupManager(UPDATED_WORKER_USER_DATA_BASE_64);
-        }
-        return managerInstance;
     }
 
     public static Instance setupManager(String userData){
@@ -146,5 +96,58 @@ public class ManagerService {
         } else {
             Logger.getLogger().log("No manager instance found to terminate.");
         }
+    }
+
+    Instance getExisitingInstance(){
+        List<Filter> filters = new ArrayList<>();
+        filters.add(Filter.builder()
+                .name("tag:Role")
+                .values(MANAGER_TAG)
+                .build());
+        filters.add(Filter.builder()
+                .name("instance-state-name")
+                .values(InstanceStateName.RUNNING.toString())  // "running"
+                .build());
+        DescribeInstancesRequest request = DescribeInstancesRequest.builder()
+                .filters(filters)
+                .build();
+
+        DescribeInstancesResponse response = Ec2Client.create().describeInstances(request);
+
+        for (Reservation reservation : response.reservations()) {
+            for (Instance instance : reservation.instances()) {
+                Logger.getLogger().log("Found running manager instance: " + instance.instanceId());
+                return instance;
+            }
+        }
+        return null;
+    }
+
+    static String getManagerUserData(){
+        ProfileCredentialsProvider credentialsProvider =
+                ProfileCredentialsProvider.builder()
+                        .profileName("default")
+                        .build();
+
+        // 3. Resolve the credentials
+        // This loads the actual values from the file.
+        AwsCredentials credentials = credentialsProvider.resolveCredentials();
+        String updatedUserData = "";
+        if (credentials instanceof AwsSessionCredentials) {
+            // Cast to the type that guarantees the session token method exists
+            AwsSessionCredentials sessionCredentials = (AwsSessionCredentials) credentials;
+            String sessionToken = sessionCredentials.sessionToken();
+            updatedUserData =  "#!/bin/bash\n" +
+                    "cd /home/ec2-user\n" +
+                    "nohup java -jar " + jarName + " " +
+                    credentials.accessKeyId() + " " +
+                    credentials.secretAccessKey() + " " +
+                    sessionToken + " " +
+                    WORKER_AMI + " " +
+                    " > manager.log 2>&1 &\n";
+            return Base64.getEncoder()
+                    .encodeToString(updatedUserData.getBytes(StandardCharsets.UTF_8));
+        }
+        else return null;
     }
 }
