@@ -17,7 +17,10 @@ public class ManagerService {
     public static final String MANAGER_ROLE = "EMR_EC2_DefaultRole";
     static final String MANAGER_TAG = "ManagerInstance";
     static final String MANAGER_AMI_ID = "ami-0829baff2115b1acb"; // with java 17, more logs
-    static final String WORKER_AMI =  "ami-0326bf6e2eb8642aa"; // replace this with actual worker AMI ID,
+//  static final String WORKER_AMI =  "ami-0326bf6e2eb8642aa"; // replace this with actual worker AMI ID,
+    static final String WORKER_AMI =  "ami-018499fbc55a2d618"; // will be dynamic from now on
+
+
     // make sure it's not manager AMI for it will cuase an infinite loop of machines creating machines
     public static final String LOCAL_TO_MANAGER_REQUEST_QUEUE = "LocalToManagerRequestQueue";
     public static final String MANAGER_TO_LOCAL_REQUEST_QUEUE = "ManagerToLocalRequestQueue";
