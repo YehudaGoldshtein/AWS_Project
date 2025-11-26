@@ -22,7 +22,6 @@ public class ManagerService {
     public static final String LOCAL_TO_MANAGER_REQUEST_QUEUE = "LocalToManagerRequestQueue";
     public static final String MANAGER_TO_LOCAL_REQUEST_QUEUE = "ManagerToLocalRequestQueue";
     static final String jarName = "AWSRemote-1.0-SNAPSHOT.jar";
-
     public static Ec2Client ec2 = Ec2Client
             .builder()
             .region(Region.US_EAST_1)   // pick your region

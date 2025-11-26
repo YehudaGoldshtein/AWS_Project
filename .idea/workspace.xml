@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="024a96c1-80af-49e4-827c-f75fb595a58c" name="Changes" comment="made code more readable">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Logger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Logger.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
-    </list>
+    <list default="true" id="024a96c1-80af-49e4-827c-f75fb595a58c" name="Changes" comment="merged all changes from gal's project" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -33,24 +29,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.AWSLocalApplication [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.AWSLocalApplication [package].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.aws-ec2-demo [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.aws-ec2-demo [package].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.aws-s3-demo [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.aws-s3-demo [package].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.awsLocal [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.awsLocal [package].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;remote1&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/yehud/IdeaProjects/AWSWorkerApp&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "Maven.AWSLocalApplication [clean].executor": "Run",
+    "Maven.AWSLocalApplication [package].executor": "Run",
+    "Maven.aws-ec2-demo [clean].executor": "Run",
+    "Maven.aws-ec2-demo [package].executor": "Run",
+    "Maven.aws-s3-demo [clean].executor": "Run",
+    "Maven.aws-s3-demo [package].executor": "Run",
+    "Maven.awsLocal [clean].executor": "Run",
+    "Maven.awsLocal [package].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "remote1",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/yehud/IdeaProjects/AWSLocalApplication/src/main/java/org/example",
+    "settings.editor.selected.configurable": "reference.settings.project.maven.repository.indices",
+    "two.files.diff.last.used.file": "C:/Users/yehud/Downloads/AWS_localApp-main/AWS_localApp-main/AWS_Project-master/src/main/java/org/example/Logger.java",
+    "two.files.diff.last.used.folder": "C:/Users/yehud/IdeaProjects/AWSLocalApplication/src/main/java/org/example"
   }
-}</component>
+}]]></component>
   <component name="RunAnythingCache">
     <option name="myCommands">
       <command value="mvn clean" />
@@ -170,7 +168,15 @@
       <option name="project" value="LOCAL‎" />
       <updated>1763995853301</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL‎-00014" summary="merged all changes from gal's project">
+      <option name="closed" value="true" />
+      <created>1764145111454</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL‎-00014" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1764145111454</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -184,6 +190,7 @@
     <MESSAGE value="fixed outputPath param&#10;not tested" />
     <MESSAGE value="tiny fixes" />
     <MESSAGE value="made code more readable" />
-    <option name="LAST_COMMIT_MESSAGE" value="made code more readable" />
+    <MESSAGE value="merged all changes from gal's project" />
+    <option name="LAST_COMMIT_MESSAGE" value="merged all changes from gal's project" />
   </component>
 </project>
