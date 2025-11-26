@@ -16,12 +16,12 @@ public class ManagerService {
 
     public static final String MANAGER_ROLE = "EMR_EC2_DefaultRole";
     static final String MANAGER_TAG = "ManagerInstance";
-    static final String MANAGER_AMI_ID =  "ami-00b3dbedc07e630b8"; // with java 17, more logs
-    static final String WORKER_AMI =  "ami-00someAMI"; // replace this with actual worker AMI ID,
+    static final String MANAGER_AMI_ID = "ami-0829baff2115b1acb"; // with java 17, more logs
+    static final String WORKER_AMI =  "ami-0326bf6e2eb8642aa"; // replace this with actual worker AMI ID,
     // make sure it's not manager AMI for it will cuase an infinite loop of machines creating machines
     public static final String LOCAL_TO_MANAGER_REQUEST_QUEUE = "LocalToManagerRequestQueue";
     public static final String MANAGER_TO_LOCAL_REQUEST_QUEUE = "ManagerToLocalRequestQueue";
-    static final String jarName = "AWSRemote-1.0-SNAPSHOT-shaded.jar";
+    static final String jarName = "AWSRemote-1.0-SNAPSHOT.jar";
 
     public static Ec2Client ec2 = Ec2Client
             .builder()

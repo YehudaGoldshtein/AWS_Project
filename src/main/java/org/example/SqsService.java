@@ -9,8 +9,10 @@ import java.util.Map;
 
 public class SqsService {
 
+
     public static final String LOG_TO_LOCAL = "LogToLocalQueue";
     static Map<String, String> queueUrls = new java.util.HashMap<>();
+
     private static final SqsClient client = SqsClient.builder()
             .region(Region.US_EAST_1)
             .build();
