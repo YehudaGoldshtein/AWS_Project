@@ -122,9 +122,6 @@ public class ClientApp {
     }
 
     private static Map<TerminalParams, String> parseArgs(String[] args){
-        if (args == null || args.length < 3 || args.length > 4){
-            return null;
-        }
         Map<TerminalParams, String> params = new java.util.HashMap<>();
         System.out.println("Parsing args...");
         System.out.println("Arg 0 (input): " + args[0]);
@@ -133,6 +130,9 @@ public class ClientApp {
         params.put(TerminalParams.OUTPUT_PATH, args[1]);
         System.out.println("Arg 2 (n): " + args[2]);
         params.put(TerminalParams.FILE_CAP, args[2]);
+        if (args == null || args.length < 3 || args.length > 4){
+            return null;
+        }
         if (args.length == 4){
             System.out.println("Arg 3 (terminate): " + args[3]);
             params.put(TerminalParams.TERMINATE, args[3]);
