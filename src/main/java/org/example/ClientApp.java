@@ -154,6 +154,8 @@ public class ClientApp {
 
     private static void finish(TerminateAction action){
         Logger.getLogger().log("ClientApp finished execution.");
+        //always good to clear the queues
+        cleanupAllQueues();
         switch (action)
         {
             case NOTHING:
