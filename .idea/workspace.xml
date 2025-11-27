@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="024a96c1-80af-49e4-827c-f75fb595a58c" name="Changes" comment="merged all changes from gal's project" />
+    <list default="true" id="024a96c1-80af-49e4-827c-f75fb595a58c" name="Changes" comment="merged all changes from gal's project">
+      <change afterPath="$PROJECT_DIR$/.idea/.copilot-plugin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.agent.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/ClientApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/ClientApp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/ManagerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/ManagerService.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,13 +24,29 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="remote1" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "YehudaGoldshtein"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/YehudaGoldshtein/AWS_Project",
+    "accountId": "c1e18be7-333c-4265-b6c2-c58d9cd92ebb"
+  }
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
 }</component>
   <component name="ProjectId" id="35N4bk1KbbsRiFkIovNwAAEKGkr" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -41,10 +63,13 @@
     "Maven.awsLocal [clean].executor": "Run",
     "Maven.awsLocal [package].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "remote1",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/yehud/IdeaProjects/AWSLocalApplication/src/main/java/org/example",
-    "settings.editor.selected.configurable": "reference.settings.project.maven.repository.indices",
+    "last_opened_file_path": "C:/Users/yehud/Downloads/claude-code-jetbrains-plugin-0.1.12-beta.zip",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "two.files.diff.last.used.file": "C:/Users/yehud/Downloads/AWS_localApp-main/AWS_localApp-main/AWS_Project-master/src/main/java/org/example/Logger.java",
     "two.files.diff.last.used.folder": "C:/Users/yehud/IdeaProjects/AWSLocalApplication/src/main/java/org/example"
   }
@@ -54,6 +79,13 @@
       <command value="mvn clean" />
       <command value="mvn package" />
     </option>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -192,5 +224,13 @@
     <MESSAGE value="made code more readable" />
     <MESSAGE value="merged all changes from gal's project" />
     <option name="LAST_COMMIT_MESSAGE" value="merged all changes from gal's project" />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
   </component>
 </project>

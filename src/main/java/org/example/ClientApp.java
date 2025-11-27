@@ -10,11 +10,23 @@ import static org.example.ManagerService.MANAGER_TO_LOCAL_REQUEST_QUEUE;
 
 public class ClientApp {
 
-
+    // All queues used in the system
+    private static final String[] ALL_QUEUES = {
+        LOCAL_TO_MANAGER_REQUEST_QUEUE,      // LocalToManagerRequestQueue
+        MANAGER_TO_LOCAL_REQUEST_QUEUE,      // ManagerToLocalRequestQueue
+        "WorkerToManagerRequestQueue",
+        "ManagerToWorkerRequestQueue",
+        "ManagerRequestQueue",
+        "WorkerRequestQueue",
+        "LogToLocalQueue"
+    };
 
     public static void run(String[] args){
         //process terminal args
         Map<TerminalParams, String> terminalParamsMap = parseArgs(args);
+
+        // Clean up all queues before starting
+        cleanupAllQueues();
         if (terminalParamsMap == null){
             System.out.println("Invalid arguments. Usage: <file_path> <analysis_type> <file_cap> [terminate]");
             return;
@@ -181,6 +193,19 @@ public class ClientApp {
 
     enum taskTypes{
         DONE, ERROR
+    }
+
+    private static void cleanupAllQueues() {
+        Logger.getLogger().log("Cleaning up all SQS queues before starting...");
+        for (String queueName : ALL_QUEUES) {
+            try {
+                SqsService.cleanUpSQSQueues(queueName);
+                Logger.getLogger().log("Purged queue: " + queueName);
+            } catch (Exception e) {
+                Logger.getLogger().log("Failed to purge queue " + queueName + ": " + e.getMessage());
+            }
+        }
+        Logger.getLogger().log("Queue cleanup complete.");
     }
 
 }
