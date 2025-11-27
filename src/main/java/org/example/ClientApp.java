@@ -160,7 +160,10 @@ public class ClientApp {
                 //do nothing
                 break;
             case TERMINATE:
-                ManagerService.terminateManager();
+                // Send TERMINATE message to Manager via SQS so it can properly shut down workers first
+                Logger.getLogger().log("Sending TERMINATE message to Manager...");
+                SqsService.sendMessage(LOCAL_TO_MANAGER_REQUEST_QUEUE, "TERMINATE");
+                Logger.getLogger().log("TERMINATE message sent. Manager will shut down workers and then terminate itself.");
                 break;
         }
     }
