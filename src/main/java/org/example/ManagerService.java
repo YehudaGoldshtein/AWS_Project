@@ -17,7 +17,7 @@ public class ManagerService {
     public static final String MANAGER_ROLE = "EMR_EC2_DefaultRole";
     static final String MANAGER_TAG = "ManagerInstance";
     //static final String MANAGER_AMI_ID = "ami-0829baff2115b1acb"; // with java 17, more (Yehuda)
-    static final String MANAGER_AMI_ID = "ami-07c96cefc7fc9c5dd"; // will be dynamic from now on (Gal)
+    static final String MANAGER_AMI_ID = "ami-092943a104c8c34a5"; // will be dynamic from now on (Gal)
 
 //  static final String WORKER_AMI =  "ami-0326bf6e2eb8642aa"; // replace this with actual worker AMI ID, (Yehuda)
     static final String WORKER_AMI = "ami-04a5572b615ab615d"; // will be dynamic from now on (Gal)
