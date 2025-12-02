@@ -14,6 +14,7 @@
 This section provides a quick reference for all required submission information:
 
 ### Instance Configuration
+
 - **Manager AMI**: `ami-092943a104c8c34a5`
 - **Manager Instance Type**: `t1.micro`
 - **Worker AMI**: `ami-0deb2c104aa5011cc`
@@ -21,11 +22,17 @@ This section provides a quick reference for all required submission information:
 - **AWS Region**: `us-east-1`
 
 ### Test Parameters
-- **n (files per worker)**: 5
+
+- **n (files per worker)**: Tested with n=1 (10-15 minutes) and n=6 (1.5 hours)
 - **Sample Input**: `input-sample.txt` (9 tasks: 3 files × 3 analysis types)
-- **Execution Time**: See [Performance Metrics](#performance-metrics) section for details
+- **Sample Output**: `output-sample.html` (included in ZIP submission)
+- **Execution Time**: 
+  - n=1: 10-15 minutes (9 workers)
+  - n=6: 1.5 hours (2 workers)
+  - See [Performance Metrics](#performance-metrics) section for full details
 
 ### All Requirements Addressed
+
 ✅ **Names and IDs**: Included above  
 ✅ **Security**: Credentials not in plain text - uses IAM roles and session credentials (see [Security Considerations](#security-considerations))  
 ✅ **Scalability**: Designed for multiple clients, analyzed for 1M+ clients (see [Scalability Analysis](#scalability-analysis))  
@@ -228,6 +235,17 @@ CONSTITUENCY    https://www.gutenberg.org/files/1659/1659-0.txt
 DEPENDENCY    https://www.gutenberg.org/files/1659/1659-0.txt
 ```
 
+### Output File
+
+The system generates an HTML file containing the analysis results. The output file includes:
+
+- A summary table with all analysis tasks
+- Links to the input URLs
+- Links to the S3 URLs where analysis results are stored
+- Error messages for any failed tasks
+
+**Sample Output File**: The ZIP submission includes a sample output file `output-sample.html` generated from running the system on `input-sample.txt`. This demonstrates the expected output format and can be used to verify the system's functionality.
+
 ---
 
 ## System Configuration
@@ -278,30 +296,42 @@ All files are stored in a dedicated S3 bucket under organized folders:
 ### Instance Configuration
 
 - **Manager Instance**:
+  
   - **Instance Type**: `t1.micro`
   - **AMI ID**: `ami-092943a104c8c34a5`
   - **Region**: `us-east-1`
-  
+
 - **Worker Instance**:
+  
   - **Instance Type**: `t1.micro`
   - **AMI ID**: `ami-0deb2c104aa5011cc`
   - **Region**: `us-east-1`
 
 ### Execution Time
 
-**IMPORTANT FOR SUBMISSION**: Record the actual execution time when running your system on the sample file and update this section.
+**Actual Test Run Results**:
 
-**Test Run Details**:
-- **Input File**: `input-sample.txt` (9 tasks: 3 files × 3 analysis types)
-- **n (files per worker)**: 5
-- **Number of Workers**: 2 (calculated as ceil(9/5) = 2)
-- **Total Execution Time**: [**FILL IN YOUR ACTUAL TIME HERE** - e.g., "10 minutes 32 seconds"]
-  - Manager startup: ~2-3 minutes
-  - Worker startup: ~2-3 minutes per worker
-  - Text download and analysis: ~3-5 minutes
-  - HTML generation and download: ~1 minute
+- **Test 1 - n=1 (1 file per worker)**:
+  - **Input File**: `input-sample.txt` (9 tasks: 3 files × 3 analysis types)
+  - **Number of Workers**: 9 (calculated as ceil(9/1) = 9)
+  - **Total Execution Time**: 10-15 minutes
+  - Breakdown:
+    - Manager startup: ~2-3 minutes
+    - Worker startup: ~2-3 minutes per worker (parallel startup)
+    - Text download and analysis: ~3-5 minutes
+    - HTML generation and download: ~1 minute
 
-**Note**: Actual execution time depends on network conditions, file sizes, and AWS service response times. The times above are typical ranges.
+- **Test 2 - n=6 (6 files per worker)**:
+  - **Input File**: `input-sample.txt` (9 tasks: 3 files × 3 analysis types)
+  - **Number of Workers**: 2 (calculated as ceil(9/6) = 2)
+  - **Total Execution Time**: 1.5 hours (90 minutes)
+  - Breakdown:
+    - Manager startup: ~2-3 minutes
+    - Worker startup: ~2-3 minutes per worker
+    - Text download and analysis: ~80-85 minutes (workers process more files each)
+    - HTML generation and download: ~1 minute
+
+**Note**: Execution time varies significantly based on the `n` parameter. With smaller `n` values, more workers are created (up to the limit), allowing for better parallelization and faster completion. With larger `n` values, fewer workers handle more tasks each, resulting in longer execution times but using fewer resources.
 
 ### Resource Usage
 
@@ -884,7 +914,9 @@ If Manager doesn't terminate automatically:
 
 - Workers poll SQS queue every iteration (no sleep in main loop)
 - Workers process one task at a time
-- Workers delete messages immediately after receiving (before processing)
+- **Workers delete SQS messages AFTER successful processing** (not before)
+  - This ensures fault tolerance: if a worker crashes during processing, the message becomes visible again after the visibility timeout
+  - Other workers can then pick up the message and retry the task
 
 **Efficiency Considerations**:
 
